@@ -1,0 +1,33 @@
+jenkins:
+    systemMessage: "Jenkins configured automatically by CasC"
+    securityRealm:
+        local:
+            allowsSignup: false
+            users:
+                - id: "admin"
+                  password: "admin"
+    authorizationStrategy:
+        loggedInUsersCanDoAnything:
+            allowAnonymousRead: false
+
+jobs:
+    - script: >
+          pipelineJob('Hello World Pipeline') {
+              definition {
+                  cps {
+                      script('''
+                          pipeline {
+                              agent any
+                              stages {
+                                  stage('Hello') {
+                                      steps {
+                                          echo 'Hello World'
+                                      }
+                                  }
+                              }
+                          }
+                      ''')
+                      sandbox()
+                  }
+              }
+          }

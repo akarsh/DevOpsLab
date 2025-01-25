@@ -1,0 +1,20 @@
+services:
+  selenium:
+    image: selenium/standalone-firefox:latest
+    ports:
+      - "4444:4444"
+    volumes:
+      - .:/app
+  test:
+    image: python:3.8-slim
+    volumes:
+      - .:/app
+    working_dir: /app
+    depends_on:
+      - selenium
+    entrypoint:
+      [
+        "sh",
+        "-c",
+        "apt-get update && apt-get install -y netcat-openbsd && while ! nc -z selenium 4444; do sleep 1; done && pip install selenium && python ./test_script_docker.py",
+      ]
